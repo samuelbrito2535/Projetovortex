@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto vortex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container perfil-container">
+        <h1 class="welcome-header">Bem-vindo(a), <span id="perfil-nome"></span>!</h1>
+        
+        <div class="info-card">
+            <h2>Sua Pontuação</h2>
+            <p class="pontos" id="perfil-pontuacao">0</p>
+        </div>
+
+        <div class="info-card">
+            <h2>Link de Indicação unico</h2>
+            <p>Compartilhe este link para ganhar pontos:</p>
+            <div class="copy-group">
+                <input type="text" id="link-indicacao-text" readonly>
+                <button id="btn-copiar">Copiar Link</button>
+            </div>
+        </div>
+        
+        <button id="btn-logout" class="logout-btn">Sair</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
