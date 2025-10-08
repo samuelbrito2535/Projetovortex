@@ -27,19 +27,19 @@ public class UsuarioController {
 
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Retorna 201 Created
+    @ResponseStatus(HttpStatus.CREATED)
     public Usuario criaUsuario(@RequestBody CadastroRequest request) {
 
-        // 1. Mapeia o DTO para a entidade Usuario
+
         Usuario novoUsuario = new Usuario();
         novoUsuario.setNome(request.nome);
         novoUsuario.setEmail(request.email);
         novoUsuario.setSenha(request.senha);
         novoUsuario.setTelefone(request.telefone);
 
+        Usuario usuarioSalvo = dao.save(novoUsuario);
 
         if (request.linkIndicacaoPai != null && !request.linkIndicacaoPai.isEmpty()) {
-
 
             Optional<Usuario> indicadorOpt = dao.findByLinkIndicacao(request.linkIndicacaoPai);
 
@@ -47,7 +47,7 @@ public class UsuarioController {
                 Usuario indicador = indicadorOpt.get();
 
 
-                novoUsuario.setIndicadoPorId(indicador.getId());
+                usuarioSalvo.setIndicadoPorId(indicador.getId());
 
 
                 indicador.setPontuacao(indicador.getPontuacao() + 1);
@@ -58,13 +58,14 @@ public class UsuarioController {
         }
 
 
-        return dao.save(novoUsuario);
+        return dao.save(usuarioSalvo);
     }
+
+
 
 
     @GetMapping("/{id}")
     public Optional<Usuario> buscarUsuarioPorId(@PathVariable Integer id) {
-
         return dao.findById(id);
     }
 
@@ -76,7 +77,6 @@ public class UsuarioController {
 
     @PutMapping
     public Usuario editarUsuario(@RequestBody Usuario usuario) {
-
         return dao.save(usuario);
     }
 
@@ -85,7 +85,6 @@ public class UsuarioController {
     @ResponseStatus(HttpStatus.NO_CONTENT) // Retorna 204 No Content
     public void excluirUsuario(@PathVariable Integer id) {
         if (!dao.existsById(id)) {
-
             throw new RuntimeException("Usuário não encontrado.");
         }
         dao.deleteById(id);
