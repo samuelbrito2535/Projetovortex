@@ -26,6 +26,8 @@ public class UsuarioController {
     }
 
 
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Usuario criaUsuario(@RequestBody CadastroRequest request) {
@@ -37,7 +39,9 @@ public class UsuarioController {
         novoUsuario.setSenha(request.senha);
         novoUsuario.setTelefone(request.telefone);
 
+
         Usuario usuarioSalvo = dao.save(novoUsuario);
+
 
         if (request.linkIndicacaoPai != null && !request.linkIndicacaoPai.isEmpty()) {
 
@@ -82,7 +86,7 @@ public class UsuarioController {
 
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // Retorna 204 No Content
+    @ResponseStatus(HttpStatus.NO_CONTENT) 
     public void excluirUsuario(@PathVariable Integer id) {
         if (!dao.existsById(id)) {
             throw new RuntimeException("Usuário não encontrado.");
