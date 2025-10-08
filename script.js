@@ -5,6 +5,7 @@ function getReferralLink() {
     return params.get('ref'); 
 }
 
+
 function saveUserSession(userId, userLink) {
     localStorage.setItem('userId', userId);
     localStorage.setItem('userLink', userLink);
@@ -97,14 +98,22 @@ if (form) {
         })
         .then(usuarioSalvo => {
             
-            saveUserSession(usuarioSalvo.id, usuarioSalvo.linkIndicacao);
+            
+            const linkDoUsuario = usuarioSalvo.linkIndicacao || usuarioSalvo.link_indicacao;
+            
+            if (!linkDoUsuario) {
+                 throw new Error("Falha interna: Link de indicação não retornado pelo servidor.");
+            }
+
+            saveUserSession(usuarioSalvo.id, linkDoUsuario);
+            
             alert("Cadastro realizado com sucesso! Redirecionando para o perfil.");
             window.location.href = 'perfil.html'; 
         })
         .catch(error => {
             
             console.error('Erro no cadastro:', error);
-            feedbackMsg.textContent = `Falha ao cadastrar: ${error.message}.`;
+            feedbackMsg.textContent = `Falha ao cadastrar: ${error.message}. Verifique o console.`;
             feedbackMsg.classList.remove('hidden');
             feedbackMsg.style.backgroundColor = '#f8d7da';
         });
@@ -120,16 +129,18 @@ if (perfilNome) {
     const btnCopiar = document.getElementById('btn-copiar');
     const linkInput = document.getElementById('link-indicacao-text');
     const btnLogout = document.getElementById('btn-logout');
-
     
     if (!userId || !userLinkUUID) {
-       
+    
         window.location.href = 'index.html'; 
     } else {
         
-        const urlBase = window.location.origin;
         
-        const linkCompleto = `${urlBase}/index.html?ref=${userLinkUUID}`;
+        const pathBase = window.location.href.substring(0, window.location.href.lastIndexOf('/'));
+        
+        const linkCompleto = `${pathBase}/index.html?ref=${userLinkUUID}`;
+        
+        
         linkInput.value = linkCompleto;
         
 
@@ -144,7 +155,7 @@ if (perfilNome) {
             })
             .catch(err => {
                 console.error("Erro ao carregar dados do perfil:", err);
-                 
+                
             });
 
         
